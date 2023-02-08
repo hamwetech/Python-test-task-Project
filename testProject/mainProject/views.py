@@ -104,3 +104,10 @@ class QuestionsAPIView(ListCreateAPIView):
     filter_backends = (filters.SearchFilter,)
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+    
+    def list(self, request, *args, **kwargs):
+        city = self.request.GET.get('city')
+        street = self.request.GET.get('street')
+        user_object = Shop.objects.filter(city__name=city, street__name=street)
+        serialized = self.get_serializer(user_object)
+        return Response({"data":serialized.data})
